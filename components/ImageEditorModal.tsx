@@ -27,31 +27,33 @@ export const ImageEditorModal: React.FC<ImageEditorModalProps> = ({ product, onC
   };
 
   const generateWithAI = async () => {
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      alert("API Key tidak ditemukan. Fitur AI tidak dapat digunakan di lingkungan static tanpa konfigurasi secret.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [
-            { text: `High quality professional food photography of ${product.name}, ${product.description}. Professional lighting, appetizing, depth of field.` }
-          ]
-        },
-        config: {
-          imageConfig: { aspectRatio: "4:3" }
-        }
+        model: 'gemini-3-flash-preview',
+        contents: 'High quality professional food photography of ' + product.name + ', ' + product.description + '. Professional lighting, appetizing, depth of field.',
       });
 
-      for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData) {
-          const newUrl = `data:image/png;base64,${part.inlineData.data}`;
-          setPreviewUrl(newUrl);
-          break;
+      // Find image part in response
+      if (response.candidates?.[0]?.content?.parts) {
+        for (const part of response.candidates[0].content.parts) {
+          if (part.inlineData) {
+            const newUrl = `data:image/png;base64,${part.inlineData.data}`;
+            setPreviewUrl(newUrl);
+            break;
+          }
         }
       }
     } catch (err) {
       console.error("AI Generation failed", err);
-      alert("Gagal membuat gambar otomatis. Pastikan API Key aktif.");
+      alert("Gagal membuat gambar otomatis.");
     } finally {
       setLoading(false);
     }

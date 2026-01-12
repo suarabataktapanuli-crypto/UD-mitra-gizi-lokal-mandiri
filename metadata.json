@@ -1,6 +1,6 @@
 {
-  "name": "Mitra Gizi Lokal Mandiri - E-Commerce",
-  "description": "An integrated nutrition supply chain platform for the 'Makanan Bergizi Gratis' program, featuring fresh food aggregation, healthy snacks, and fortified dry goods.",
+  "name": "UD Mitra Gizi Lokal Mandiri",
+  "description": "Platform rantai pasok gizi terintegrasi untuk program Makanan Bergizi Gratis (MBG) - Nutrisi Terintegrasi, Menguatkan Generasi.",
   "requestFramePermissions": [
     "geolocation"
   ]
